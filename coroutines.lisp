@@ -1,0 +1,26 @@
+(defun A ()
+  (labels ((A1 ()
+             (format *standard-output* "A 1~%")
+             #'A2)
+           (A2 ()
+             (format *standard-output* "A  2~%")
+             #'A1))
+    #'A1))
+
+(defun B ()
+  (labels ((B1 ()
+             (format *standard-output* "B 1~%")
+             #'B2)
+           (B2 ()
+             (format *standard-output* "B  2~%")
+             #'B1))
+    #'B1))
+
+(defun dispatcher ()
+  (let ((continuations (list (A) (B))))
+    (dotimes (i 10)
+      (let ((f (pop continuations)))
+        (let ((cont (funcall f)))
+          (nconc continuations (list cont)))))))
+
+	  

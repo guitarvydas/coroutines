@@ -1,11 +1,17 @@
-all: lisp js py
+all: js py lisp
 
 js:
+	@echo ''
+	@echo '*** Javascript ***'
 	node coroutines.js
 
 
 py:
-	python3 cor.py
+	@echo ''
+	@echo '*** Python ***'
+	python3 coroutines.py
 
 lisp:
-	sbcl --noinform --non-interactive --load cr.lisp --eval "(coroutine-manager)" --quit
+	@echo ''
+	@echo '*** Lisp ***'
+	sbcl --noinform --non-interactive --load coroutines.lisp --eval "(dispatcher)" --quit

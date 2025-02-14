@@ -1,5 +1,3 @@
-let continuations = [];
-
 function A () {
     const self = {
         A1: function () {
@@ -30,6 +28,7 @@ function B () {
 }
 
 function dispatcher () {
+    let continuations = [];
     continuations.push (A());
     continuations.push (B());
     let i = 10;

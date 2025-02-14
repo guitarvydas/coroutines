@@ -1,5 +1,3 @@
-continuations = []
-
 class A:
     def __init__(self):
         self.A1 = lambda: self._A1()
@@ -27,6 +25,7 @@ class B:
         return self.B1
 
 def dispatcher():
+    continuations = []
     continuations.append(A().A1)
     continuations.append(B().B1)
     i = 10
