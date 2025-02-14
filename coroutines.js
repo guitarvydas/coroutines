@@ -1,54 +1,48 @@
-let bookmark = {"A": null, "B": null};
-let next = "A";
+let continuations = [];
 
 function A () {
     const self = {
-        idle: function () {
+        A1: function () {
             console.log ("A 1");
-            bookmark.A = self.running;
-            next = "B";
-            return;
+            return (self.A2);
         },
-         running: function () {
-            console.log ("A  2");
-            bookmark.A = self.idle;
-            next = "B";
-            return;
+         A2: function () {
+             console.log ("A  2");
+             return (self.A1);
         }
     };
-    bookmark.A = self.idle;
+    return self.A1;
     return;
 }
 
 function B () {
     const self = {
-        idle: function () {
+        B1: function () {
             console.log ("B 1");
-            bookmark.B = self.running;
-            next = "A";
-            return;
+            return self.B2;
         },
-         running: function () {
+         B2: function () {
             console.log ("B  2");
-            bookmark.B = self.idle;
-            next = "A";
-            return;
+            return self.B1;
         }
     };
-    bookmark.B = self.idle;
-    return;
+    return self.B1;
 }
 
-function coroutine_manager () {
-    A();
-    B();
+function dispatcher () {
+    continuations.push (A());
+    continuations.push (B());
     let i = 10;
     let f;
     while (i > 0) {
-        f = bookmark[next];
-        f();
+	// circular queue - pull ready continuation from front of queue
+        f = continuations.shift ();
+	// resume continuation, when it yields, it returns the next continuation
+        let cont = f();
+	// push resulting next continuation onto back of queue
+	continuations.push (cont);
         i -= 1;
     }
 }
 
-coroutine_manager();
+dispatcher ();
